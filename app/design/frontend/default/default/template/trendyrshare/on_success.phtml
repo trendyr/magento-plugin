@@ -1,0 +1,20 @@
+<?php if($_SESSION['trendyr']) : ?>
+<?php 
+
+		$resource = Mage::getSingleton('core/resource');
+		$read_connection = $resource->getConnection('core_read');
+		$table_name = $resource->getTableName('trendyrshare');
+		$q = "SELECT * from $table_name";
+		$r = $read_connection->fetchAll($q);
+		$jsmode = $r[0]['jsmode'];
+		$url = $jsmode;
+
+
+?>
+<script type="text/javascript" src="<?=$url?>"></script>
+<script>
+var trendyr = new Trendyr('<?=$_SESSION['trendyr']['transaction_social_key']?>');
+trendyr.transactionComplete();
+</script>
+<?php unset($_SESSION['trendyr']); ?>
+<?php endif;?>

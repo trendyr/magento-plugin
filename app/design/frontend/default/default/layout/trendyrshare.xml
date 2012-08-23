@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <checkout_onepage_success>      
+        <reference name="content">
+        	<!-- <action method="setTemplate"><template>trendyrshare/on_success.phtml</template></action> -->
+        	<block type="page/html" name="checkout.trendyr" template="trendyrshare/on_success.phtml"/>
+        </reference>
+    </checkout_onepage_success>    
+	<checkout_cart_index>    
+		<reference name="content">	    	
+	    	<!-- adds the Trendyr button to the top  -->
+	    	<block before="-" type="page/html" name="checkout.cart.trendyr" template="trendyrshare/cart_trendyr_button.phtml"/>	
+		</reference>
+	</checkout_cart_index>
+</layout>

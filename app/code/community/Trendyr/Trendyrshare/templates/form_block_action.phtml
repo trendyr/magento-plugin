@@ -1,0 +1,96 @@
+<?php 
+/**
+     * Get the resource model
+     */
+$resource = Mage::getSingleton('core/resource');
+
+/**
+ * Retrieve the read connection
+ */
+
+$trendyr_url_debug = 'https://sandbox.trendyr.com/trendyr.js';
+$trendyr_url_live  = 'https://api.trendyr.com/trendyr.js';
+
+$read_connection = $resource->getConnection('core_read');
+$table_name = $resource->getTableName('trendyrshare');
+ 	
+
+if(isset($_POST['update']))
+{
+	if($_POST['update'] == 1)
+	{
+		//check if key exists in the db already.
+	
+		$write_connection = $resource->getConnection('core_write');
+		
+		if($_POST['merchantkey'])
+		{
+			$binds = array('merchantkey'=>$_POST['merchantkey']);
+			$q = "UPDATE $table_name SET merchantkey=:merchantkey  WHERE id=1";	
+			$write_connection->query($q, $binds);
+		}
+		
+		if($_POST['jsmode'])
+		{		
+			echo 'fired jsmode';
+			$jsmode = $_POST['jsmode'];
+			$q = "UPDATE $table_name SET jsmode='$jsmode' WHERE id=1";
+			$write_connection->query($q);
+		
+		}
+	
+		$binds = array('tcopy'=>$_POST['tcopy']);					
+		$q = "UPDATE $table_name SET tcopy=:tcopy WHERE id=1";
+		$write_connection->query($q, $binds);
+		
+	}
+
+}
+
+
+
+//setup the form
+$q = "SELECT * from $table_name";
+$r = $read_connection->fetchAll($q);
+
+$merchantkey = $r[0]['merchantkey'];
+$jsmode = $r[0]['jsmode'];
+$tcopy  = $r[0]['tcopy']; 
+$url = Mage::helper("adminhtml")->getUrl('*/*/index'); 
+
+
+function solve_dd($jsmode, $trendyr_url_debug, $trendyr_url_live)
+{
+	//why I can't get at the url variables, I'm not sure so im passing them as args for now
+	
+	$output  = '';
+	$op_live  = '<option value="'.$trendyr_url_live.'">Live</option>';
+	$op_debug = '<option value="'.$trendyr_url_debug.'">Debug</option>';
+
+	if($jsmode == $trendyr_url_debug)
+	{
+		$output  = 'foo'.$op_debug.$op_live;
+
+	} else {
+		$output  = 'bar'.$op_live.$op_debug;
+	}
+	
+	return $output;
+}
+
+
+?>
+<h1>Trendyr</h1>
+<div>
+	<form action="<?=$url?>" method="post">
+		Merchant Key: <input name="merchantkey" value="<?=$merchantkey?>">
+		<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" /><br/><br/>
+		Trendyr Mode: <input name="update"   type="hidden" value="1" />		
+		<select name="jsmode">
+			<?=solve_dd($jsmode, $trendyr_url_debug, $trendyr_url_live);?>
+		</select><br/><br/>
+		Modal legal copy:<br/>
+		<textarea name="tcopy" cols="40" rows="5"><?=$tcopy?></textarea><br/>
+		<input type="submit"   value="save"/>
+	</form>
+</div>

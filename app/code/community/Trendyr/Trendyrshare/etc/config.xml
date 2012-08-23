@@ -1,0 +1,204 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Trendyr_Trendyrshare>
+            <version>1.0</version>
+        </Trendyr_Trendyrshare>
+    </modules>
+    <frontend>
+        <routers>
+            <trendyrshare>
+                <use>standard</use>
+                <args>
+                    <module>Trendyr_Trendyrshare</module>
+                    <frontName>trendyrshare</frontName>
+                </args>
+            </trendyrshare>
+        </routers>
+        <layout>
+            <updates>
+                <trendyrshare>
+                    <file>trendyrshare.xml</file>
+                </trendyrshare>
+            </updates>
+        </layout>
+    </frontend>
+
+
+
+<admin>
+        <routers>
+            <trendyrshare>
+                <use>admin</use>
+                <args>
+                    <module>Trendyr_Trendyrshare</module>
+                    <frontName>trendyrshare</frontName>
+                </args>
+            </trendyrshare>
+        </routers>
+    </admin>    
+    <adminhtml>
+        <menu>
+            <menu1 translate="title" module="Trendyrshare">
+                <title>Trendyr</title>
+                <sort_order>9999</sort_order>
+                <children>
+                    <menuitem1 module="Trendyrshare">
+                        <title>Configure</title>
+                        <action>trendyrshare/index</action>
+                    </menuitem1>
+                </children>                
+            </menu1>
+        </menu>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <menu1 translate="title" module="Trendyrshare">
+							<title>Trendyr Configure</title>
+                			<sort_order>60</sort_order>
+                            <children>
+                                <menuitem1>
+                                    <title>Menu item 1</title>
+                                </menuitem1>
+                            </children>
+                       </menu1>
+                   </children>
+               </admin>
+           </resources>
+        </acl>
+    </adminhtml> 
+
+
+
+
+
+
+  
+    <global>
+    	<helpers>
+	        <Trendyrshare>
+	            <class>Trendyr_Trendyrshare_Helper</class>
+	        </Trendyrshare>  
+	    </helpers>
+
+    	<sales>
+            <quote>
+                <totals>
+                    <trendyrshare>
+                        <class>trendyrshare/sales_quote_address_total_trendyrshare</class>
+      				</trendyrshare>
+                </totals>
+            </quote>
+            <order_invoice>
+                <totals>
+                    <trendyrshare>
+                        <class>trendyrshare/sales_order_total_invoice_trendyrshare</class>
+                    </trendyrshare>
+                </totals>
+            </order_invoice>
+            <order_creditmemo>
+                <totals>
+                    <trendyrshare>
+                        <class>trendyrshare/sales_order_total_creditmemo_trendyrshare</class>
+                    </trendyrshare>
+                </totals>
+            </order_creditmemo>
+        </sales>
+        <events>
+        	<paypal_prepare_line_items>
+        		<observers>
+        			<paypal_prepare_line_items>
+        				<class>trendyrshare/observer</class>
+                        <method>updatePaypalTotal</method>
+        			</paypal_prepare_line_items>
+        		</observers>
+        	</paypal_prepare_line_items>
+           	<sales_order_invoice_save_after>
+                <observers>
+                    <sales_order_invoice_save_after>
+                        <class>trendyrshare/observer</class>
+                        <method>invoiceSaveAfter</method>
+                    </sales_order_invoice_save_after>
+                </observers>
+            </sales_order_invoice_save_after>
+            <sales_order_creditmemo_save_after>
+               <observers>
+                   <sales_order_creditmemo_save_after>
+                       <class>trendyrshare/observer</class>
+                       <method>creditmemoSaveAfter</method>
+                   </sales_order_creditmemo_save_after>
+               </observers>
+           </sales_order_creditmemo_save_after>
+        </events>
+        <fieldsets>
+            <sales_convert_quote_address>
+                <trendyrshare_amount><to_order>*</to_order></trendyrshare_amount>
+                <base_trendyrshare_amount><to_order>*</to_order></base_trendyrshare_amount>
+            </sales_convert_quote_address>
+        </fieldsets>
+        <pdf>
+            <totals>
+                <trendyrshare translate="title">
+                    <title>Trendyrshare</title>
+                    <source_field>trendyrshare_amount</source_field>
+                    <font_size>7</font_size>
+                    <display_zero>0</display_zero>
+                    <sort_order>650</sort_order>
+                    <amount_prefix>-</amount_prefix>
+                </trendyrshare>
+            </totals>
+        </pdf>
+        <models>
+            <trendyrshare>
+                <class>Trendyr_Trendyrshare_Model</class>
+                <resourceModel>trendyrshare_mysql4</resourceModel>
+            </trendyrshare>
+            <trendyrshare_mysql4>
+                <class>Trendyr_Trendyrshare_Model_Mysql4</class>
+                <entities>
+                    <trendyrshare>
+                        <table>trendyrshare</table>
+                    </trendyrshare>
+                </entities>
+            </trendyrshare_mysql4>
+        </models>
+        <resources>
+            <trendyrshare_setup>
+                <setup>
+                    <module>Trendyr_Trendyrshare</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </trendyrshare_setup>
+            <trendyrshare_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </trendyrshare_write>
+            <trendyrshare_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </trendyrshare_read>
+        </resources>
+        <blocks>
+            <trendyrshare>
+                <class>Trendyr_Trendyrshare_Block</class>
+            </trendyrshare>
+        </blocks>
+        <helpers>
+            <trendyrshare>
+                <class>Trendyr_Trendyrshare_Helper</class>
+            </trendyrshare>
+        </helpers>
+    </global>
+    <default>
+    	<sales>
+            <totals_sort>
+            	<trendyrshare>15</trendyrshare>
+            </totals_sort>
+        </sales>
+    </default>
+</config>

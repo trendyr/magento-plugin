@@ -1,0 +1,42 @@
+<?php if(isset($_SESSION['trendyr'])) :?>
+<?php 
+		$resource = Mage::getSingleton('core/resource');
+		$read_connection = $resource->getConnection('core_read');
+		$table_name = $resource->getTableName('trendyrshare');
+		$q = "SELECT * from $table_name";
+		$r = $read_connection->fetchAll($q);
+		$jsmode = $r[0]['jsmode'];
+ ?>
+
+	<script type="text/javascript" src="<?=$jsmode?>"></script>
+			
+	
+	<?php if($_SESSION['trendyr']['btn_msg_code'] != 2) : ?>
+	<?php  
+		//get the notes val from the db
+		
+
+		$tcopy  = $r[0]['tcopy']; 
+		$tcopy  = preg_replace("@\"@", '\"', $tcopy); //get rid of any double quote issues.
+		
+	?>
+		<script type="text/javascript">
+			//Load the Trendyr Javascript Library
+			window.onload = function(){
+				//Add any addtional notices or notes to the modal window
+				var notes = "<?=$tcopy?>";
+				
+				//Instantiate the Trendyr Javascript Library
+				//Include the Transaction Social Key
+				var trendyr = new Trendyr("<?=$_SESSION['trendyr']['transaction_social_key']?>", notes);	
+				trendyr.createButton();
+				//When the window is closed refresh the window
+				trendyr.onClose(function(result){
+					window.location.reload(); 
+				}); 
+			};
+		</script>
+		<div href="#" id="Trendyr-Button"></div>
+	<?php endif; ?>
+	
+<?php endif; ?>
